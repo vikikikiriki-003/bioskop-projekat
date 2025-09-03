@@ -1,0 +1,43 @@
+/* HERO SECTION */
+
+.hero-section{
+    background-color: var(--light-brown);
+    width: 100%;
+    height: 100vh;
+    position: relative;
+}
+
+.hero-content{
+    color: var(--brown);
+    text-transform: uppercase;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* CINEMAS SECTION */
+
+.cinemas-section{
+    background-color: var(--brown);
+    padding: 8.6rem 0rem;
+}
+
+.custom-table{
+    background-color: var(--light-brown);
+    padding: 2rem 1rem;
+    border: 0.2rem solid var(--orange);
+    border-radius: 1rem;
+}
+
+.table-heading{
+    font-size: 2.4rem;
+    color: var(--brown);
+}
+
+.table-content{
+    font-size: 1.8rem;
+    color: var(--orange);
+    font-weight: bold;
+}

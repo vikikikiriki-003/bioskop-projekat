@@ -1,0 +1,135 @@
+<div class="booking-wrapper" *ngIf="!loading; else loadingTemplate">
+  <!-- Breadcrumb Navigation -->
+  <div class="breadcrumb-container">
+    <div class="container">
+      <ul class="breadcrumbs">
+        <li>Ulaznice</li>
+        <li class="active">Sedišta</li>
+        <li>Naplata</li>
+        <li>Plati</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Booking Section -->
+  <section class="booking-section">
+    <div class="container">
+      <!-- Cinema Selection -->
+      <div class="cinema-selection">
+        <h3>Bioskop:</h3>
+        <div class="cinema-options">
+          <div 
+            *ngFor="let cinema of cinemaOptions" 
+            class="cinema-option" 
+            [class.selected]="selectedCinemaOption === cinema.id"
+            (click)="onCinemaOptionChange(cinema.id)">
+            {{ cinema.name }}
+          </div>
+        </div>
+      </div>
+
+      <div class="booking-container">
+        <!-- Theater Layout Column -->
+        <div class="theater-layout">
+          <!-- Screen -->
+          <div class="screen-container">
+            <div class="screen">Ekran</div>
+          </div>
+
+          <!-- Theater Rows -->
+          <div class="theater-rows">
+            <div class="row" *ngFor="let row of rows; let i = index">
+              <div class="row-label">{{ row }}</div>
+              <div class="seats">
+                <div *ngFor="let seat of rowSeats; let j = index" 
+                  [ngClass]="getSeatClass(i, j)"
+                  (click)="toggleSeat(i, j)"
+                  class="seat">
+                  {{ j + 1 }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Seat Legend -->
+          <div class="seat-legend">
+            <div class="legend-item">
+              <div class="legend-icon standard"></div>
+              <span>Standardno sedište</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-icon selected"></div>
+              <span>Izabrano sedište</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-icon empty"></div>
+              <span>Zauzeto sedište</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-icon love"></div>
+              <span>Love seat</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-icon disability">
+                <span>♿</span>
+              </div>
+              <span>Mesto za osobe sa invaliditetom</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Booking Summary -->
+        <div class="booking-summary">
+          <h2 class="movie-title">{{ movie?.title }}</h2>
+          
+          <!-- Movie Details -->
+          <div class="movie-details">
+            <div class="movie-poster">
+              <img [src]="movie?.poster | tmdbImage" alt="{{ movie?.title }}">
+            </div>
+            <div class="movie-info">
+              <h3 class="cinema-title">{{ cinemaOptions[selectedCinemaOption - 1].name }}</h3>
+              <p class="showtime">Sala 3</p>
+              <p class="date-time">{{ selectedDate | date:'dd.MM.yyyy' }} {{ selectedTime }}</p>
+              <p class="seat-info" *ngIf="selectedSeats.length > 0">
+                Sedišta: {{ getSelectedSeatsText() }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Ticket Details -->
+          <div class="tickets">
+            <div class="ticket-row" *ngFor="let seat of selectedSeats">
+              <span class="ticket-type">Sedište {{ seat.row }}{{ seat.seatNumber + 1 }}</span>
+              <span class="ticket-price">{{ (seat.type === 'vip' || seat.type === 'love' ? pricePerVipSeat : pricePerSeat) | currency:'RSD':'symbol-narrow':'1.0-0' }}</span>
+            </div>
+          </div>
+
+          <!-- Total Amount -->
+          <div class="total" *ngIf="selectedSeats.length > 0">
+            <div class="total-row">
+              <div class="total-label">UKUPNA SUMA</div>
+              <div class="total-amount">{{ getTotalPrice() | currency:'RSD':'symbol-narrow':'1.0-0' }}</div>
+            </div>
+          </div>
+
+          <!-- Action Button -->
+          <button class="next-step" 
+            [disabled]="selectedSeats.length === 0"
+            (click)="onNextStep()">
+            Sledeći korak
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Loading Template -->
+<ng-template #loadingTemplate>
+  <div class="loading-container">
+    <div class="loading-spinner"></div>
+  </div>
+</ng-template>
+
+

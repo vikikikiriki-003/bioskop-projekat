@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background -->
+    <rect width="32" height="32" fill="#1a237e"/>
+    
+    <!-- Film Strip -->
+    <rect x="8" y="6" width="16" height="20" fill="white" rx="2"/>
+    
+    <!-- Film Perforations -->
+    <rect x="8" y="8" width="16" height="2" fill="#1a237e"/>
+    <rect x="8" y="22" width="16" height="2" fill="#1a237e"/>
+    
+    <!-- Letter B -->
+    <text x="16" y="20" font-family="Arial" font-size="14" font-weight="bold" fill="#1a237e" text-anchor="middle">B</text>
+</svg> 

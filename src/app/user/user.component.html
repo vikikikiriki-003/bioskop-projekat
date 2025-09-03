@@ -1,0 +1,293 @@
+<section class="profile-hero">
+  <div class="container" *ngIf="user">
+    <div class="profile-card">
+      <div class="profile-header">
+        <div class="profile-avatar">
+          <img [src]="['https://ui-avatars.com/api/?name='+user.email+'&background=e50914&color=fff&size=200']" alt="Profile Avatar">
+        </div>
+        <div class="profile-details">
+          <div class="profile-info">
+            <h1 class="profile-name">{{user.firstName}} {{user.lastName}}</h1>
+            <p class="profile-email">{{user.email}}</p>
+          </div>
+          <div class="profile-actions">
+            <button class="edit-profile-btn" (click)="isUserInfoModalOpen = true">
+              <i class="fas fa-user-edit"></i> Izmeni profil
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="profile-stats">
+        <div class="stat-item">
+          <i class="fas fa-ticket-alt"></i>
+          <div class="stat-info">
+            <span class="stat-value">{{getOrdersCount()}}</span>
+            <span class="stat-label">Kupovine</span>
+          </div>
+        </div>
+        <div class="stat-item">
+          <i class="fas fa-star"></i>
+          <div class="stat-info">
+            <span class="stat-value">{{getLikedCount()}}</span>
+            <span class="stat-label">Ocenjeno</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Orders Section -->
+    <div class="orders-section" *ngIf="user.orders && user.orders.length > 0">
+      <div class="section-header">
+        <h2>Vaše rezervacije</h2>
+        <div class="filters">
+          <button class="filter-btn active">Sve</button>
+          <button class="filter-btn">Aktivne</button>
+          <button class="filter-btn">Istorija</button>
+        </div>
+      </div>
+      
+      <div class="orders-grid">
+        <div class="order-card" *ngFor="let order of user.orders">
+          <div class="order-header">
+            <img [src]="order.posterUrl" [alt]="order.title">
+            <div class="order-overlay">
+              <h3>{{ order.title }}</h3>
+              <div class="order-meta">
+                <span><i class="fas fa-calendar"></i> {{ order.startDate | date:'dd.MM.yyyy' }}</span>
+                <span><i class="fas fa-clock"></i> {{ order.time }}</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="order-body">
+            <div class="order-info">
+              <div class="info-row">
+                <span class="label">Bioskop:</span>
+                <span class="value">{{ order.cinema.name }}</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Sedišta:</span>
+                <span class="value">{{ order.seats?.join(', ') }}</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Ukupno:</span>
+                <span class="value price">{{ order.count * order.pricePerItem | currency:'RSD':'symbol-narrow':'1.0-0' }}</span>
+              </div>
+            </div>
+            
+            <div class="order-rating" *ngIf="order.rating">
+              <div class="stars">
+                <ng-container *ngFor="let star of [1, 2, 3, 4, 5]">
+                  <i class="fas fa-star" [class.rated]="star <= order.rating"></i>
+                </ng-container>
+              </div>
+              <div class="review-text" *ngIf="order.review">{{ order.review }}</div>
+            </div>
+            
+            <div class="order-actions">
+              <button *ngIf="order.status !== 'canceled'" (click)="doCancel(order)" class="action-btn cancel" title="Otkaži rezervaciju">
+                <i class="fas fa-ban"></i> Otkaži
+              </button>
+              <button *ngIf="!order.rating && order.status !== 'canceled'" 
+                      (click)="openReviewModal(order)" 
+                      class="action-btn review" 
+                      title="Oceni film">
+                <i class="fas fa-star"></i> Oceni
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="!user.orders || user.orders.length === 0">
+      <div class="empty-content">
+        <i class="fas fa-ticket-alt"></i>
+        <h3>Nemate rezervisane karte</h3>
+        <p>Još uvek niste kupili nijednu kartu za film. Istražite naš katalog i rezervišite vaše prvo filmsko iskustvo!</p>
+        <a routerLink="/movies" class="browse-button">
+          <i class="fas fa-film"></i> Pregledaj filmove
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- User Info Modal -->
+<div class="modal-overlay" *ngIf="isUserInfoModalOpen && user" (click)="isUserInfoModalOpen = false">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2><i class="fas fa-user-edit"></i> Izmeni profil</h2>
+      <button class="close-btn" (click)="isUserInfoModalOpen = false">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    
+    <div class="modal-body">
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="info-card-content">
+            <div class="info-label">Email</div>
+            <div class="info-value" *ngIf="!isEditing || editField !== 'email'">{{user.email}}</div>
+            <input *ngIf="isEditing && editField === 'email'" type="email" [(ngModel)]="editValue" class="edit-input">
+          </div>
+          <button class="edit-button" (click)="doChangeEmail()" *ngIf="!isEditing || editField !== 'email'">
+            <i class="fas fa-pen"></i>
+          </button>
+          <div class="edit-actions" *ngIf="isEditing && editField === 'email'">
+            <button class="save-btn" (click)="saveEdit()"><i class="fas fa-check"></i></button>
+            <button class="cancel-btn" (click)="cancelEdit()"><i class="fas fa-times"></i></button>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-content">
+            <div class="info-label">Lozinka</div>
+            <div class="info-value" *ngIf="!isEditing || editField !== 'password'">••••••••</div>
+            <input *ngIf="isEditing && editField === 'password'" type="password" [(ngModel)]="editValue" class="edit-input">
+          </div>
+          <button class="edit-button" (click)="doChangePassword()" *ngIf="!isEditing || editField !== 'password'">
+            <i class="fas fa-key"></i>
+          </button>
+          <div class="edit-actions" *ngIf="isEditing && editField === 'password'">
+            <button class="save-btn" (click)="saveEdit()"><i class="fas fa-check"></i></button>
+            <button class="cancel-btn" (click)="cancelEdit()"><i class="fas fa-times"></i></button>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-content">
+            <div class="info-label">Ime</div>
+            <div class="info-value" *ngIf="!isEditing || editField !== 'firstName'">{{user.firstName}}</div>
+            <input *ngIf="isEditing && editField === 'firstName'" type="text" [(ngModel)]="editValue" class="edit-input">
+          </div>
+          <button class="edit-button" (click)="doChangeFirstName()" *ngIf="!isEditing || editField !== 'firstName'">
+            <i class="fas fa-pen"></i>
+          </button>
+          <div class="edit-actions" *ngIf="isEditing && editField === 'firstName'">
+            <button class="save-btn" (click)="saveEdit()"><i class="fas fa-check"></i></button>
+            <button class="cancel-btn" (click)="cancelEdit()"><i class="fas fa-times"></i></button>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-content">
+            <div class="info-label">Prezime</div>
+            <div class="info-value" *ngIf="!isEditing || editField !== 'lastName'">{{user.lastName}}</div>
+            <input *ngIf="isEditing && editField === 'lastName'" type="text" [(ngModel)]="editValue" class="edit-input">
+          </div>
+          <button class="edit-button" (click)="doChangeLastName()" *ngIf="!isEditing || editField !== 'lastName'">
+            <i class="fas fa-pen"></i>
+          </button>
+          <div class="edit-actions" *ngIf="isEditing && editField === 'lastName'">
+            <button class="save-btn" (click)="saveEdit()"><i class="fas fa-check"></i></button>
+            <button class="cancel-btn" (click)="cancelEdit()"><i class="fas fa-times"></i></button>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-content">
+            <div class="info-label">Telefon</div>
+            <div class="info-value" *ngIf="!isEditing || editField !== 'phone'">{{user.phone}}</div>
+            <input *ngIf="isEditing && editField === 'phone'" type="tel" [(ngModel)]="editValue" class="edit-input">
+          </div>
+          <button class="edit-button" (click)="doChangePhone()" *ngIf="!isEditing || editField !== 'phone'">
+            <i class="fas fa-phone"></i>
+          </button>
+          <div class="edit-actions" *ngIf="isEditing && editField === 'phone'">
+            <button class="save-btn" (click)="saveEdit()"><i class="fas fa-check"></i></button>
+            <button class="cancel-btn" (click)="cancelEdit()"><i class="fas fa-times"></i></button>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-content">
+            <div class="info-label">Adresa</div>
+            <div class="info-value" *ngIf="!isEditing || editField !== 'address'">{{user.address}}</div>
+            <input *ngIf="isEditing && editField === 'address'" type="text" [(ngModel)]="editValue" class="edit-input">
+          </div>
+          <button class="edit-button" (click)="doChangeAddress()" *ngIf="!isEditing || editField !== 'address'">
+            <i class="fas fa-home"></i>
+          </button>
+          <div class="edit-actions" *ngIf="isEditing && editField === 'address'">
+            <button class="save-btn" (click)="saveEdit()"><i class="fas fa-check"></i></button>
+            <button class="cancel-btn" (click)="cancelEdit()"><i class="fas fa-times"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Review Modal -->
+<div class="modal-overlay" *ngIf="isReviewModalOpen && selectedOrder">
+  <div class="modal-content review-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2><i class="fas fa-star"></i> Ocenite film</h2>
+      <button class="close-btn" (click)="closeReviewModal()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    
+    <div class="modal-body">
+      <div class="movie-card">
+        <div class="movie-poster">
+          <img [src]="selectedOrder.posterUrl" alt="Movie poster">
+        </div>
+        <div class="movie-info">
+          <h3>{{ selectedOrder.title }}</h3>
+          <p><i class="fas fa-calendar-alt"></i> {{selectedOrder.startDate | date:'dd.MM.yyyy'}}</p>
+          <p><i class="fas fa-clock"></i> {{selectedOrder.time}}</p>
+          <p><i class="fas fa-building"></i> {{selectedOrder.cinema.name}}</p>
+        </div>
+      </div>
+
+      <div class="rating-section">
+        <h4>Vaša ocena</h4>
+        <div class="stars-container">
+          <ng-container *ngFor="let star of [1, 2, 3, 4, 5]">
+            <i class="fas fa-star" 
+               [class.selected]="star <= (hoverRating || reviewRating)"
+               (mouseenter)="hoverRating = star" 
+               (mouseleave)="hoverRating = 0"
+               (click)="setRating(star)"></i>
+          </ng-container>
+        </div>
+        <div class="rating-text">
+          <span *ngIf="(hoverRating || reviewRating) === 1">Veoma loš</span>
+          <span *ngIf="(hoverRating || reviewRating) === 2">Loš</span>
+          <span *ngIf="(hoverRating || reviewRating) === 3">Prosečan</span>
+          <span *ngIf="(hoverRating || reviewRating) === 4">Dobar</span>
+          <span *ngIf="(hoverRating || reviewRating) === 5">Odličan</span>
+        </div>
+      </div>
+      
+      <div class="review-section">
+        <h4>Vaš komentar</h4>
+        <textarea 
+          [(ngModel)]="reviewText" 
+          placeholder="Podelite vaše utiske o filmu..."
+          rows="4">
+        </textarea>
+        <div class="review-tips">
+          <p><i class="fas fa-info-circle"></i> Savet: Napišite šta vam se najviše svidelo, a šta nije.</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="modal-footer">
+      <button class="cancel-btn" (click)="closeReviewModal()">
+        <i class="fas fa-times"></i> Otkaži
+      </button>
+      <button 
+        class="submit-btn" 
+        [disabled]="!reviewRating" 
+        (click)="submitReview()">
+        <i class="fas fa-paper-plane"></i> Pošalji ocenu
+      </button>
+    </div>
+  </div>
+</div>
+

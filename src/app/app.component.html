@@ -1,0 +1,53 @@
+<header class="header">
+  <div class="header-container">
+    <nav class="navigation">
+      <div class="navigation-links">
+        <a class="navigation-link animate-link" routerLink="/"><i class="fa-solid fa-house-chimney"></i> Početna strana</a>
+        <a class="navigation-link animate-link" routerLink="/about"><i class="fa-solid fa-circle-info"></i> O nama</a>
+        <a class="navigation-link animate-link" routerLink="/movies"><i class="fa-solid fa-clapperboard"></i> Naši filmovi</a>
+        <a class="navigation-link login-button" routerLink="/login" *ngIf="!service.getActiveUser()">
+          <span>Login</span>
+          <i class="fa-solid fa-right-to-bracket login-icon"></i>
+        </a>
+        <a class="navigation-link profile-button" routerLink="/user" *ngIf="service.getActiveUser() as user">
+          <span>{{ user.firstName[0] }}{{ user.lastName[0] }}</span>
+          <span>{{ user.email }}</span>
+        </a>
+        <button class="navigation-link logout-button" *ngIf="service.getActiveUser()" (click)="doLogout()">
+          <i class="fa-solid fa-sign-out-alt"></i>
+          <span>Log out</span>
+        </button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<router-outlet />
+
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-compact">
+      <div class="footer-brand">
+        <h2 class="footer-logo-text">Bioskop</h2>
+        <div class="social-icons">
+          <a href="#" class="social-icon"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" class="social-icon"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" class="social-icon"><i class="fa-brands fa-twitter-x"></i></a>
+          <a href="#" class="social-icon"><i class="fa-brands fa-youtube"></i></a>
+          <a href="#" class="social-icon"><i class="fa-brands fa-tiktok"></i></a>
+        </div>
+      </div>
+      
+      <div class="footer-nav">
+        <a class="footer-link" routerLink="/"><i class="fa-solid fa-home"></i> Početna</a>
+        <a class="footer-link" routerLink="/about"><i class="fa-solid fa-info-circle"></i> O nama</a>
+        <a class="footer-link" routerLink="/movies"><i class="fa-solid fa-film"></i> Filmovi</a>
+      </div>
+
+      <div class="footer-contact">
+        <div class="contact-item"><i class="fa-solid fa-phone-volume"></i> 064123456</div>
+        <div class="contact-item"><i class="fa-solid fa-map-marker-alt"></i> Mis Irbijeve, Beograd</div>
+      </div>
+    </div>
+  </div>
+</footer>

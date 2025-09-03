@@ -1,0 +1,188 @@
+<div class="payment-page">
+  <div class="video-background">
+    <video autoplay muted loop playsinline preload="auto" class="bg-video" disableRemotePlayback>
+      <source src="/assets/home.mp4#t=0,30" type="video/mp4">
+    </video>
+    <div class="overlay"></div>
+  </div>
+
+  <div class="payment-card-container">
+    <div class="payment-card">
+      <div class="payment-header">
+        <div class="logo">
+          <i class="fas fa-film"></i>
+          <h3>UDILOVIĆ</h3>
+        </div>
+        <div class="steps">
+          <div class="step completed">1</div>
+          <div class="step-connector"></div>
+          <div class="step completed">2</div>
+          <div class="step-connector"></div>
+          <div class="step active">3</div>
+        </div>
+      </div>
+
+      <div class="payment-content" *ngIf="!loading && order">
+        <div class="movie-preview">
+          <div class="movie-poster">
+            <img [src]="order.posterUrl" alt="Movie Poster">
+            <div class="movie-details-overlay">
+              <h3>{{ order.title }}</h3>
+              <div class="movie-info">
+                <span><i class="fas fa-calendar"></i> {{ order.startDate | date:'dd.MM.yyyy' }}</span>
+                <span><i class="fas fa-clock"></i> {{ order.time }}</span>
+                <span><i class="fas fa-building"></i> {{ order.cinema.name }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="ticket-summary">
+            <div class="ticket-header">
+              <h4>Pregled rezervacije</h4>
+            </div>
+            <div class="ticket-details">
+              <div class="ticket-row">
+                <span>Sedišta</span>
+                <span>{{ order.seats.join(', ') }}</span>
+              </div>
+              <div class="ticket-row">
+                <span>Broj karata</span>
+                <span>{{ order.count }}</span>
+              </div>
+              <div class="ticket-row">
+                <span>Cena po karti</span>
+                <span>{{ order.pricePerItem | currency:'RSD':'symbol-narrow':'1.0-0' }}</span>
+              </div>
+              <div class="ticket-divider"></div>
+              <div class="ticket-total">
+                <span>Ukupno</span>
+                <span>{{ order.count * order.pricePerItem | currency:'RSD':'symbol-narrow':'1.0-0' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="payment-details">
+          <h2>Podaci za plaćanje</h2>
+          
+          <div class="payment-method active">
+            <i class="fas fa-credit-card"></i>
+            <span>Kartica</span>
+          </div>
+          
+          <div class="card-wrapper">
+            <div class="supported-cards">
+              <h4>Podržane kartice</h4>
+              <div class="card-icons">
+                <div class="card-type">
+                  <i class="fab fa-cc-visa"></i>
+                  <span>Visa</span>
+                </div>
+                <div class="card-type">
+                  <i class="fab fa-cc-mastercard"></i>
+                  <span>Mastercard</span>
+                </div>
+                <div class="card-type">
+                  <i class="fab fa-cc-amex"></i>
+                  <span>American Express</span>
+                </div>
+                <div class="card-type">
+                  <i class="fab fa-cc-discover"></i>
+                  <span>Discover</span>
+                </div>
+              </div>
+            </div>
+            
+            <form (ngSubmit)="onSubmit()" class="card-form">
+              <div class="form-group">
+                <label>Broj kartice</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-credit-card"></i>
+                  <input 
+                    type="text" 
+                    placeholder="XXXX XXXX XXXX XXXX" 
+                    [(ngModel)]="cardNumber" 
+                    name="cardNumber" 
+                    required
+                    (input)="validateCardNumber($event)"
+                    maxlength="19">
+                </div>
+                <div class="error-message" *ngIf="cardNumberError">{{ cardNumberError }}</div>
+              </div>
+              
+              <div class="form-group">
+                <label>Ime i prezime vlasnika</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-user"></i>
+                  <input 
+                    type="text" 
+                    placeholder="Ime prezime" 
+                    [(ngModel)]="cardHolder" 
+                    name="cardHolder" 
+                    required
+                    (input)="validateCardHolder($event)">
+                </div>
+                <div class="error-message" *ngIf="cardHolderError">{{ cardHolderError }}</div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Važi do</label>
+                  <div class="input-wrapper">
+                    <i class="fas fa-calendar"></i>
+                    <input 
+                      type="text" 
+                      placeholder="MM/GG" 
+                      [(ngModel)]="expiryDate" 
+                      name="expiryDate" 
+                      required
+                      (input)="formatExpiryDate($event)"
+                      maxlength="5">
+                  </div>
+                  <div class="error-message" *ngIf="expiryDateError">{{ expiryDateError }}</div>
+                </div>
+                
+                <div class="form-group">
+                  <label>CVV</label>
+                  <div class="input-wrapper">
+                    <i class="fas fa-lock"></i>
+                    <input 
+                      type="text" 
+                      placeholder="XXX" 
+                      [(ngModel)]="cvv" 
+                      name="cvv" 
+                      required 
+                      maxlength="3"
+                      (input)="validateCVV($event)">
+                  </div>
+                  <div class="error-message" *ngIf="cvvError">{{ cvvError }}</div>
+                </div>
+              </div>
+              
+              <div class="terms-checkbox">
+                <input type="checkbox" id="terms" [(ngModel)]="termsAccepted" name="terms" required>
+                <label for="terms">Slažem se sa <a href="#">uslovima korišćenja</a></label>
+              </div>
+              
+              <div class="actions">
+                <a routerLink="/movies" class="back-button">Nazad</a>
+                <button type="submit" class="pay-button" [disabled]="!isFormValid()">
+                  Plati {{ order.count * order.pricePerItem | currency:'RSD':'symbol-narrow':'1.0-0' }}
+                </button>
+              </div>
+            </form>
+          </div>
+          
+          <div class="secure-payment">
+            <i class="fas fa-shield-alt"></i>
+            <span>Vaši podaci su sigurni i zaštićeni</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="loading" *ngIf="loading">
+        <div class="spinner"></div>
+        <p>Učitavanje detalja plaćanja...</p>
+      </div>
+    </div>
+  </div>
+</div> 

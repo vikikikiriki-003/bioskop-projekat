@@ -1,0 +1,116 @@
+<section class="hero-banner">
+    <div class="overlay"></div>
+    <div class="hero-content">
+        <h1 class="hero-title">Naši filmovi</h1>
+        <p class="hero-subtitle">Istražite našu bogatu kolekciju filmova i pronađite sledeći omiljeni kroz našu premium selekciju</p>
+        <div class="hero-buttons">
+            <a href="#movies-grid" class="btn btn-hero">Pregledaj sve filmove</a>
+        </div>
+    </div>
+</section>
+
+<section class="filter-section">
+    <div class="container">
+        <div class="filter-container">
+            <div class="filter-group search-group">
+                <div class="input-icon-wrapper">
+                    <i class="fa-solid fa-search search-icon"></i>
+                    <input class="search-input" type="text" [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()" placeholder="Pretraži filmove..." />
+                </div>
+            </div>
+            
+            <div class="filter-group filters">
+                <div class="filter-dropdown">
+                    <select [(ngModel)]="selectedGenre" (ngModelChange)="onFilterChange()" class="filter-select">
+                        <option [value]="null">Žanr</option>
+                        <option *ngFor="let genre of genres" [value]="genre.genreId">{{ genre.name }}</option>
+                    </select>
+                </div>
+                
+                <div class="filter-dropdown">
+                    <select [(ngModel)]="selectedDirector" (ngModelChange)="onFilterChange()" class="filter-select">
+                        <option [value]="null">Režiser</option>
+                        <option *ngFor="let director of directors" [value]="director.directorId">{{ director.name }}</option>
+                    </select>
+                </div>
+                
+                <div class="filter-dropdown">
+                    <select [(ngModel)]="selectedActor" (ngModelChange)="onFilterChange()" class="filter-select">
+                        <option [value]="null">Glumac</option>
+                        <option *ngFor="let actor of actors" [value]="actor.actorId">{{ actor.name }}</option>
+                    </select>
+                </div>
+                
+                <div class="filter-dropdown">
+                    <select [(ngModel)]="selectedRuntime" (ngModelChange)="onFilterChange()" class="filter-select">
+                        <option [value]="null">Trajanje</option>
+                        <option *ngFor="let runtime of runtimes" [value]="runtime">{{ runtime }} min</option>
+                    </select>
+                </div>
+                
+                <div class="filter-dropdown">
+                    <select class="filter-select" [(ngModel)]="minRating" (ngModelChange)="onFilterChange()">
+                        <option [value]="null">Ocena</option>
+                        <option *ngFor="let r of [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5]" [value]="r">{{ r }}+ &#9733;</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="filter-group buttons">
+                <button (click)="searchMovies()" class="btn btn-search">
+                    <i class="fa-solid fa-filter"></i> Filtriraj
+                </button>
+                <button (click)="resetSearch()" class="btn btn-reset">
+                    <i class="fa-solid fa-rotate"></i> Reset
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="movies-grid" class="movies-grid-section">
+    <div class="loading-container" *ngIf="isLoading">
+        <div class="loading-spinner"></div>
+    </div>
+    
+    <div class="container" *ngIf="!isLoading">
+        <div class="movies-grid" *ngIf="movies && movies.length > 0">
+            <div class="movie-card" *ngFor="let movie of movies">
+                <div class="movie-poster-container">
+                    <img class="movie-poster" [src]="movie.poster" [alt]="movie.originalTitle" loading="lazy" width="240" height="360">
+                    <div class="movie-rating">
+                        <span>{{movie.rating}}</span>
+                        <i class="fa-solid fa-star"></i>
+                    </div>
+                    <div class="movie-duration">
+                        <i class="fa-regular fa-clock"></i>
+                        <span>{{movie.runTime}} min</span>
+                    </div>
+                    <div class="movie-actions">
+                        <a class="movie-action-btn details-btn" [routerLink]="['/details/',movie.movieId]">
+                            <i class="fa-solid fa-circle-info"></i>
+                            <span>Detalji</span>
+                        </a>
+                        <a class="movie-action-btn reserve-btn" [routerLink]="['/details/'+movie.movieId+'/booking']">
+                            <i class="fa-solid fa-ticket"></i>
+                            <span>Rezerviši</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="movie-info">
+                    <h3 class="movie-title">{{movie.title}}</h3>
+                    <p class="movie-description">{{movie.shortDescription}}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="no-results" *ngIf="movies && movies.length === 0">
+            <i class="fa-solid fa-film-slash"></i>
+            <h3>Nema pronađenih filmova</h3>
+            <p>Pokušajte sa drugačijim filterima</p>
+            <button (click)="resetSearch()" class="btn btn-search">Resetuj pretragu</button>
+        </div>
+    </div>
+    
+    <div class="bottom-glow"></div>
+</section>

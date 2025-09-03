@@ -1,0 +1,132 @@
+<section class="signup-section">
+  <div class="video-background">
+    <video autoplay muted loop playsinline preload="auto" class="bg-video" disableRemotePlayback>
+      <source src="/assets/home.mp4#t=0,30" type="video/mp4">
+    </video>
+    <div class="overlay"></div>
+  </div>
+  
+  <div class="signup-container">
+    <div class="signup-header">
+      <h2>Registracija</h2>
+      <p class="signup-subtitle">Postanite deo naše filmske zajednice</p>
+    </div>
+
+    <div class="signup-form">
+      <div class="form-row">
+        <div class="form-group">
+          <div class="input-icon-wrapper">
+            <mat-form-field appearance="outline" class="input-field">
+              <mat-label>Ime</mat-label>
+              <input type="text" matInput [(ngModel)]="firstName" placeholder="Unesite vaše ime">
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="input-icon-wrapper">
+            <mat-form-field appearance="outline" class="input-field">
+              <mat-label>Prezime</mat-label>
+              <input type="text" matInput [(ngModel)]="lastName" placeholder="Unesite vaše prezime">
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="input-icon-wrapper">
+          <mat-form-field appearance="outline" class="input-field">
+            <mat-label>Email adresa</mat-label>
+            <input type="email" matInput [(ngModel)]="email" placeholder="Unesite email adresu">
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <div class="input-icon-wrapper">
+            <mat-form-field appearance="outline" class="input-field">
+              <mat-label>Lozinka</mat-label>
+              <input type="password" matInput [(ngModel)]="password" placeholder="Unesite lozinku">
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="input-icon-wrapper">
+            <mat-form-field appearance="outline" class="input-field">
+              <mat-label>Potvrdite lozinku</mat-label>
+              <input type="password" matInput [(ngModel)]="repeatPassword" placeholder="Ponovite lozinku">
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="input-icon-wrapper">
+          <mat-form-field appearance="outline" class="input-field">
+            <mat-label>Telefon</mat-label>
+            <input type="tel" matInput [(ngModel)]="phone" placeholder="Unesite broj telefona">
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="input-icon-wrapper">
+          <mat-form-field appearance="outline" class="input-field">
+            <mat-label>Adresa</mat-label>
+            <input type="text" matInput [(ngModel)]="address" placeholder="Unesite vašu adresu">
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="input-icon-wrapper">
+          <mat-form-field appearance="outline" class="input-field">
+            <mat-label>Omiljeni žanr</mat-label>
+            <mat-select matInput [disabled]="!genreList" [(ngModel)]="genre">
+              <mat-option *ngFor="let genre of genreList" [value]="genre">{{genre}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <mat-checkbox color="primary">Prihvatam uslove korišćenja</mat-checkbox>
+      </div>
+
+      <button class="signup-button" (click)="doSignup()">
+        <span>Registruj se</span>
+      </button>
+
+      <div class="login-divider">
+        <span>ili</span>
+      </div>
+
+      <div class="social-login">
+        <button class="social-button google">
+          <i class="fa-brands fa-google"></i>
+          <span>Google</span>
+        </button>
+        <button class="social-button facebook">
+          <i class="fa-brands fa-facebook-f"></i>
+          <span>Facebook</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="login-prompt">
+      <p>Već imate nalog? <a [routerLink]="['/login']">Prijavite se</a></p>
+      <div class="back-to-home">
+        <a routerLink="/">
+          <i class="fa-solid fa-home"></i> Nazad na početnu
+        </a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="cinema-decorations">
+    <div class="popcorn"></div>
+    <div class="ticket"></div>
+  </div>
+</section>

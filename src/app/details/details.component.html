@@ -1,0 +1,171 @@
+<!-- Hero Banner with Movie Backdrop -->
+<section class="movie-hero" *ngIf="movie">
+    <div class="backdrop-overlay"></div>
+    <div class="movie-gradient"></div>
+    <div class="container hero-container">
+        <div class="movie-hero-content">
+            <h1 class="movie-title">{{movie.title}}</h1>
+            <h2 class="movie-original-title">{{movie.originalTitle}}</h2>
+            
+            <div class="movie-meta">
+                <div class="meta-item">
+                    <i class="fa-regular fa-clock"></i>
+                    <span>{{movie.runTime}} min</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fa-solid fa-calendar"></i>
+                    <span>{{utils.formatDate(movie.startDate)}}</span>
+                </div>
+                <div class="meta-item rating">
+                    <i class="fa-solid fa-star"></i>
+                    <span>{{movie.rating}}</span>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <a [routerLink]="['/details/'+movie.movieId+'/booking']" class="btn btn-primary">
+                    <i class="fa-solid fa-ticket"></i>
+                    <span>Rezerviši odmah</span>
+                </a>
+                <a href="#trailer" class="btn btn-secondary">
+                    <i class="fa-solid fa-play"></i>
+                    <span>Pogledaj trejler</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Movie Details Section -->
+<section class="movie-details-section" *ngIf="movie">
+    <div class="container">
+        <div class="movie-details-grid">
+            <!-- Left Column - Poster and Info -->
+            <div class="movie-poster-column">
+                <div class="poster-container">
+                    <img [src]="movie.poster" [alt]="movie.title" class="movie-poster">
+                    <div class="poster-overlay"></div>
+                </div>
+                
+                <div class="movie-info-card">
+                    <h3 class="info-title">Info o filmu</h3>
+                    
+                    <div class="info-item">
+                        <span class="info-label">Režiser</span>
+                        <span class="info-value">{{movie.director.name}}</span>
+                    </div>
+                    
+                    <div class="info-item">
+                        <span class="info-label">Žanrovi</span>
+                        <div class="genre-tags">
+                            <span class="genre-tag" *ngFor="let genre of movie.movieGenres">
+                                {{genre.genre.name}}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <span class="info-label">Premijera</span>
+                        <span class="info-value">{{utils.formatDate(movie.startDate)}}</span>
+                    </div>
+                    
+                    <div class="info-item">
+                        <span class="info-label">Trajanje</span>
+                        <span class="info-value">{{movie.runTime}} minuta</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Column - Description and Cast -->
+            <div class="movie-content-column">
+                <div class="content-card synopsis">
+                    <h3 class="content-title">Sinopsis</h3>
+                    <p class="movie-description">{{movie.description}}</p>
+                </div>
+                
+                <div class="content-card cast">
+                    <h3 class="content-title">Glumačka postava</h3>
+                    <div class="cast-grid">
+                        <div class="cast-member" *ngFor="let actor of movie.movieActors">
+                            <div class="cast-avatar">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+                            <div class="cast-info">
+                                <h4 class="cast-name">{{actor.actor.name}}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Reviews Section -->
+    <div class="reviews-section">
+        <div class="container">
+            <h2 class="section-title">Recenzije korisnika</h2>
+            <div class="reviews-container" *ngIf="movieReviews && movieReviews.length > 0">
+                <div class="review-card" *ngFor="let review of movieReviews">
+                    <div class="review-header">
+                        <div class="reviewer-info">
+                            <i class="fa-solid fa-user"></i>
+                            <span class="reviewer-name">{{review.userName}}</span>
+                        </div>
+                        <div class="review-rating">
+                            <ng-container *ngFor="let star of [1,2,3,4,5]">
+                                <i class="fa-solid fa-star" [class.rated]="star <= review.rating"></i>
+                            </ng-container>
+                        </div>
+                    </div>
+                    <div class="review-content" *ngIf="review.review">
+                        <p>{{review.review}}</p>
+                    </div>
+                    <div class="review-date">
+                        <i class="fa-regular fa-calendar"></i>
+                        <span>{{review.date | date:'dd.MM.yyyy.'}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="no-reviews" *ngIf="!movieReviews || movieReviews.length === 0">
+                <i class="fa-regular fa-comment-dots"></i>
+                <p>Još uvek nema recenzija za ovaj film</p>
+                <p class="sub-text">Budite prvi koji će podeliti svoje utiske</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Trailer Section -->
+    <div id="trailer" class="trailer-section">
+        <div class="container">
+            <h2 class="section-title">Zvanični trejler</h2>
+            <div class="trailer-placeholder">
+                <div class="play-button">
+                    <i class="fa-solid fa-play"></i>
+                </div>
+                <span class="trailer-message">Trailer će uskoro biti dostupan</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Booking CTA -->
+    <div class="booking-cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2 class="cta-title">Spremni za gledate ovaj film?</h2>
+                <p class="cta-text">Rezervišite svoje mesto još danas i uživajte u premium iskustvu</p>
+                <a [routerLink]="['/details/'+movie.movieId+'/booking']" class="btn btn-primary btn-large">
+                    <i class="fa-solid fa-ticket"></i>
+                    <span>Rezerviši sedište</span>
+                </a>
+            </div>
+        </div>
+        <div class="cta-glow"></div>
+    </div>
+</section>
+
+<!-- Loading State -->
+<div class="loading-container" *ngIf="!movie">
+    <div class="loading-spinner"></div>
+</div>
+
+

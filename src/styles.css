@@ -1,0 +1,283 @@
+:root{
+    --brown: #3F2113;
+    --orange: #D98B48;
+    --yellow: #F2D335;
+    --light-brown: #DDC8BD;
+    --black: #000000;
+    --white: #FFFFFF;
+    --red: rgb(235, 28, 80);
+    
+    /* Dark theme colors */
+    --dark-primary: #0a0b0e;
+    --dark-secondary: #151821;
+    --dark-accent: rgb(235, 28, 80);
+    --dark-text-primary: #f1f1f1;
+    --dark-text-secondary: #c0c0c0;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html{
+    font-size: 62.5%;
+}
+
+html,
+body {  
+    height: 100%;
+    font-family: Roboto, "Helvetica Neue", sans-serif; 
+    color: var(--white);
+}
+
+/* Dark theme overrides for Angular Material */
+.dark-theme .mat-mdc-form-field-focus-overlay {
+    background-color: transparent !important;
+}
+
+.dark-theme .mat-mdc-text-field-wrapper {
+    background-color: var(--dark-secondary) !important;
+}
+
+.dark-theme .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+    background-color: var(--dark-secondary) !important;
+}
+
+.dark-theme .mat-mdc-select-value, 
+.dark-theme .mat-mdc-select-arrow, 
+.dark-theme .mat-mdc-form-field-label {
+    color: var(--dark-text-primary) !important;
+}
+
+.dark-theme .mat-mdc-select-panel {
+    background-color: var(--dark-secondary) !important;
+}
+
+.dark-theme .mat-mdc-option {
+    color: var(--dark-text-primary) !important;
+}
+
+.dark-theme .mat-mdc-option:hover {
+    background-color: rgba(229, 9, 20, 0.1) !important;
+}
+
+.dark-theme .mat-primary .mat-mdc-option.mat-selected:not(.mat-option-disabled) {
+    color: var(--dark-accent) !important;
+}
+
+/* Add dark-panel class to apply to mat-select */
+.dark-panel {
+    background-color: var(--dark-secondary) !important;
+    color: var(--dark-text-primary) !important;
+}
+
+.container{
+    margin: 0 auto;
+    max-width: 130rem;
+    padding: 0 5%;
+}
+
+.grid{
+    display: grid;
+    gap: 5rem;
+}
+
+.grid--1-column{
+    grid-template-columns: 1fr;
+}
+
+.grid--2-column{
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.grid--3-column{
+    grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 1150px) {
+    .grid--3-column{
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.grid--4-column{
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.heading-primary{
+    font-size: 7.2rem;
+}
+
+.heading-secondary{
+    font-size: 4.8rem;
+}
+
+.heading-tertiary{
+    font-size: 3.6rem;
+}
+
+.heading-fourth{
+    font-size: 3.2rem;
+}
+
+.paragraph{
+    font-size: 2.4rem;
+}
+
+/* Modern scrollbar for dark theme */
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(21, 24, 33, 0.9);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(229, 9, 20, 0.5);
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(229, 9, 20, 0.7);
+}
+
+/* Footer styles */
+.footer {
+    background-color: #0a0a0a;
+    padding: 30px 0;
+    color: #fff;
+    clear: both;
+    width: 100%;
+    margin-top: 50px;
+    border-top: 1px solid #333;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    flex-wrap: wrap;
+}
+
+.footer-nav, .footer-contact, .footer-social {
+    margin: 15px 0;
+    min-width: 200px;
+}
+
+.footer-nav h3, .footer-contact h3, .footer-social h3 {
+    color: #fff;
+    margin-bottom: 15px;
+    font-size: 18px;
+    font-weight: 600;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.footer-nav h3:after, .footer-contact h3:after, .footer-social h3:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 40px;
+    height: 2px;
+    background-color: rgb(235, 28, 80);
+}
+
+.footer-links {
+    display: flex;
+    flex-direction: column;
+}
+
+.footer-link {
+    color: #ccc;
+    text-decoration: none;
+    margin-bottom: 10px;
+    transition: color 0.3s;
+    font-size: 16px;
+    display: block;
+    line-height: 1.6;
+}
+
+.footer-link:hover {
+    color: rgb(235, 28, 80);
+}
+
+.contact-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    color: #ccc;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.contact-item i {
+    margin-right: 10px;
+    color: rgb(28, 159, 235);
+    width: 20px;
+    text-align: center;
+}
+
+.social-icons {
+    display: flex;
+    gap: 15px;
+}
+
+.social-icon {
+    color: #ccc;
+    font-size: 24px;
+    transition: color 0.3s;
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.social-icon:hover {
+    color: #fff;
+    background-color: rgb(235, 28, 80);
+}
+
+@media (max-width: 768px) {
+    .footer-container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .footer-nav, .footer-contact, .footer-social {
+        width: 100%;
+        margin: 15px 0;
+    }
+    
+    .footer-links, .contact-info {
+        align-items: center;
+    }
+    
+    .footer-nav h3:after, .footer-contact h3:after, .footer-social h3:after {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    
+    .contact-item {
+        justify-content: center;
+    }
+}
+
+
+
